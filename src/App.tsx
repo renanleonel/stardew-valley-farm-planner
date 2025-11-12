@@ -1,36 +1,29 @@
 import { FarmBackground } from '@/containers/farm-background';
+import farms from '@/lib/data/farms.json';
 import { useState } from 'react';
 import { Grid } from './containers/grid';
 
 type GridState = (string | null)[][];
 
-const DEFAULT_GRID_ROWS = 30;
-const DEFAULT_GRID_COLS = 40;
-const layoutConfig = {
-  background: '/img/layouts/full_background.jpg',
-  tileSize: 16,
-};
-
-const BASE_TILE_SIZE = layoutConfig.tileSize;
-const FARM_BACKGROUND = layoutConfig.background;
+const TILE_SIZE = 16;
 
 const createEmptyGrid = (rows: number, cols: number): GridState =>
   Array.from({ length: rows }, () => Array.from({ length: cols }, () => null));
 
 function App() {
+  const farmData = farms.regular;
+
   const [gridSize, setGridSize] = useState<{ rows: number; cols: number }>({
-    rows: DEFAULT_GRID_ROWS,
-    cols: DEFAULT_GRID_COLS,
+    rows: 0,
+    cols: 0,
   });
 
   const [boardDimensions, setBoardDimensions] = useState<{ width: number; height: number }>({
-    width: DEFAULT_GRID_COLS * BASE_TILE_SIZE,
-    height: DEFAULT_GRID_ROWS * BASE_TILE_SIZE,
+    width: 0,
+    height: 0,
   });
 
-  const [grid, setGrid] = useState<GridState>(() =>
-    createEmptyGrid(DEFAULT_GRID_ROWS, DEFAULT_GRID_COLS)
-  );
+  const [grid, setGrid] = useState<GridState>(() => createEmptyGrid(0, 0));
 
   const handleImageLoad = ({
     width,
@@ -43,9 +36,16 @@ function App() {
     cols: number;
     rows: number;
   }) => {
-    setGridSize({ rows, cols });
-    setGrid(createEmptyGrid(rows, cols));
-    setBoardDimensions({ width, height });
+    if (farmData && width === farmData.width && height === farmData.height) {
+      setGridSize({ rows, cols });
+      setGrid(createEmptyGrid(rows, cols));
+      setBoardDimensions({ width, height });
+    }
+  };
+
+  const layoutConfig = {
+    background: `/img/layouts/${farmData.backgroundImage}`,
+    tileSize: TILE_SIZE,
   };
 
   return (
@@ -57,7 +57,7 @@ function App() {
             <Grid
               grid={grid}
               gridSize={gridSize}
-              background={FARM_BACKGROUND}
+              background={layoutConfig.background}
               dimensions={boardDimensions}
             />
           </div>
