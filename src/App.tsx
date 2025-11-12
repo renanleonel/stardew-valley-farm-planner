@@ -59,6 +59,15 @@ function App() {
               gridSize={gridSize}
               background={layoutConfig.background}
               dimensions={boardDimensions}
+              tileSize={TILE_SIZE}
+              buildings={{
+                house: farmData.house
+                  ? { ...farmData.house, image: '/img/tiles/house.png' }
+                  : undefined,
+                greenhouse: farmData.greenhouse
+                  ? { ...farmData.greenhouse, image: '/img/tiles/greenhouse-broken.png' }
+                  : undefined,
+              }}
             />
           </div>
         </section>
