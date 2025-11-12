@@ -1,4 +1,6 @@
-import { useState, type SyntheticEvent } from 'react';
+import { FarmBackground } from '@/containers/farm-background';
+import { useState } from 'react';
+import { Grid } from './containers/grid';
 
 type GridState = (string | null)[][];
 
@@ -30,43 +32,34 @@ function App() {
     createEmptyGrid(DEFAULT_GRID_ROWS, DEFAULT_GRID_COLS)
   );
 
-  const handleImageLoad = (event: SyntheticEvent<HTMLImageElement>) => {
-    const img = event.currentTarget;
-
-    const cols = Math.round(img.naturalWidth / BASE_TILE_SIZE);
-    const rows = Math.round(img.naturalHeight / BASE_TILE_SIZE);
-
-    if (!Number.isFinite(cols) || !Number.isFinite(rows)) return;
-
-    if (cols <= 0 || rows <= 0) return;
-
+  const handleImageLoad = ({
+    width,
+    height,
+    cols,
+    rows,
+  }: {
+    width: number;
+    height: number;
+    cols: number;
+    rows: number;
+  }) => {
     setGridSize({ rows, cols });
     setGrid(createEmptyGrid(rows, cols));
-    setBoardDimensions({ width: img.naturalWidth, height: img.naturalHeight });
+    setBoardDimensions({ width, height });
   };
 
   return (
     <div className='flex min-h-screen bg-slate-900 text-slate-100'>
       <main className='flex flex-1 flex-col overflow-hidden'>
-        <img src={FARM_BACKGROUND} onLoad={handleImageLoad} className='hidden' aria-hidden='true' />
+        <FarmBackground layoutConfig={layoutConfig} onImageLoad={handleImageLoad} />
         <section className='flex flex-1 overflow-auto px-6 py-6'>
           <div className='relative w-full flex justify-center '>
-            <div
-              className='grid overflow-visible'
-              style={{
-                width: `${boardDimensions.width}px`,
-                height: `${boardDimensions.height}px`,
-                gridTemplateColumns: `repeat(${gridSize.cols}, minmax(0, 1fr))`,
-                backgroundImage: `url(${FARM_BACKGROUND})`,
-                backgroundSize: '100% 100%',
-                backgroundPosition: 'top left',
-              }}>
-              {grid.map((row, rowIndex) =>
-                row.map((_, colIndex) => (
-                  <div key={`${rowIndex}-${colIndex}`} className='border border-gray-700/10' />
-                ))
-              )}
-            </div>
+            <Grid
+              grid={grid}
+              gridSize={gridSize}
+              background={FARM_BACKGROUND}
+              dimensions={boardDimensions}
+            />
           </div>
         </section>
       </main>
