@@ -161,14 +161,14 @@ export function ItemPalette({
   };
   return (
     <div className="flex h-full min-h-0 flex-col bg-forest-900 text-parchment">
-      <div className="border-b border-forest-700 px-4 pb-4 pt-5">
+      <div className="border-b border-forest-700 px-5 pb-5 pt-6">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h2 className="font-display text-2xl font-bold leading-none">
+            <h2 className="font-display text-[1.75rem] font-bold leading-none tracking-tight">
               Item library
             </h2>
-            <p className="mt-2 text-xs text-mist">
-              {interior ? "Furnish this room" : "Choose what goes on the farm"}
+            <p className="mt-2 text-sm leading-5 text-mist">
+              {interior ? "Furnish this room" : "Buildings, crops, and details"}
             </p>
           </div>
           <Button
@@ -181,7 +181,7 @@ export function ItemPalette({
             <PanelLeftClose className="size-4" />
           </Button>
         </div>
-        <label className="mt-5 block text-xs font-semibold text-parchment">
+        <label className="mt-6 block text-xs font-semibold uppercase tracking-[0.12em] text-mist">
           Search items
           <span className="relative mt-2 block">
             <Search
@@ -214,7 +214,7 @@ export function ItemPalette({
         </label>
       </div>
       <div
-        className="grid grid-cols-2 gap-2 border-b border-forest-700 p-3"
+        className="grid grid-cols-2 gap-2 border-b border-forest-700 px-4 py-4"
         role="group"
         aria-label="Item categories"
       >
@@ -228,7 +228,7 @@ export function ItemPalette({
               setSearch("");
               resetResults();
             }}
-            className={`flex min-h-11 items-center gap-2 rounded-lg border px-3 text-left text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 ${!query && tab === id ? "border-amber-300/60 bg-forest-700 text-amber-200" : "border-forest-700 text-mist hover:border-forest-500 hover:text-parchment"}`}
+            className={`flex min-h-11 items-center gap-2 rounded-lg border px-3 text-left text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 ${!query && tab === id ? "border-amber-400 bg-forest-800 text-amber-200" : "border-forest-700 bg-forest-950/30 text-mist hover:border-forest-500 hover:text-parchment"}`}
           >
             <Icon aria-hidden="true" className="size-4 shrink-0" />
             {id}
@@ -237,9 +237,9 @@ export function ItemPalette({
       </div>
       <div
         ref={scrollContainer}
-        className="min-h-0 flex-1 overflow-y-auto px-3 pb-4 pt-3"
+        className="min-h-0 flex-1 overflow-y-auto px-4 pb-5 pt-4"
       >
-        <div className="mb-3 flex items-center justify-between gap-2 px-1 text-xs text-mist">
+        <div className="mb-3 flex items-center justify-between gap-2 px-1 text-xs font-medium text-mist">
           <span
             className="min-w-0 truncate"
             title={query ? search.trim() : undefined}
@@ -259,10 +259,10 @@ export function ItemPalette({
                 onChoose(item.id);
                 onClose?.();
               }}
-              className={`flex min-h-27 flex-col items-center justify-center gap-1 rounded-lg border px-2 py-2 text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 ${activeId === item.id ? "border-amber-300 bg-forest-700" : "border-forest-700 bg-forest-800/50 hover:border-forest-500 hover:bg-forest-800"}`}
+              className={`flex min-h-28 min-w-0 flex-col items-center justify-start gap-1.5 rounded-lg border px-2 py-3 text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 ${activeId === item.id ? "border-amber-400 bg-forest-800 shadow-[inset_0_0_0_1px_rgba(214,168,107,0.28)]" : "border-forest-700 bg-forest-800/60 hover:border-forest-500 hover:bg-forest-800"}`}
             >
               <SpritePreview item={item} season={season} />
-              <span className="line-clamp-2 text-xs font-medium leading-4 text-parchment">
+              <span className="max-w-full break-words text-xs font-medium leading-4 text-parchment">
                 {item.name}
               </span>
               {activeId === item.id && (
@@ -292,7 +292,7 @@ export function ItemPalette({
           </div>
         )}
       </div>
-      <div className="border-t border-forest-700 px-4 py-3 text-xs text-mist">
+      <div className="border-t border-forest-700 bg-forest-950/30 px-5 py-3 text-xs leading-5 text-mist">
         <span className="font-semibold text-parchment">Tip</span> · Right-click
         the map to stop placing.
       </div>

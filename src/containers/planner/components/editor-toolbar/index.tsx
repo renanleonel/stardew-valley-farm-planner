@@ -88,15 +88,15 @@ export function EditorToolbar({
   ];
   return (
     <div className="flex h-full min-h-0 flex-col bg-forest-900 text-parchment">
-      <div className="flex items-start gap-3 border-b border-forest-700 px-4 pb-4 pt-5">
-        <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-forest-700 text-amber-200">
+      <div className="flex items-start gap-2 border-b border-forest-700 px-4 pb-5 pt-6">
+        <div className="grid size-9 shrink-0 place-items-center rounded-lg border border-amber-400/40 bg-forest-800 text-amber-200">
           <Leaf aria-hidden="true" className="size-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="font-display text-xl font-bold leading-none">
+          <h2 className="whitespace-nowrap font-display text-[1.35rem] font-bold leading-none tracking-tight">
             Farm planner
           </h2>
-          <p className="mt-2 text-xs text-mist">
+          <p className="mt-2 text-xs tracking-wide text-mist">
             Game {mapIndex.gameVersion.split(",")[0]}
           </p>
         </div>
@@ -110,9 +110,11 @@ export function EditorToolbar({
           <PanelRightClose className="size-4" />
         </Button>
       </div>
-      <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold">Farm</h2>
+      <div className="min-h-0 flex-1 divide-y divide-forest-700 overflow-y-auto px-4">
+        <section className="space-y-3 pb-5 pt-5">
+          <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-amber-200">
+            Farm
+          </h2>
           {interiorTitle ? (
             <Button
               variant="secondary"
@@ -136,7 +138,7 @@ export function EditorToolbar({
                   if (found) onMap(found.id);
                 }}
                 aria-label="Farm map"
-                className="mt-1.5 h-10 w-full rounded-lg border border-forest-600 bg-forest-950 px-3 text-base font-medium text-parchment focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 lg:text-sm"
+                className="mt-1.5 h-10 w-full rounded-lg border border-forest-600 bg-forest-950 px-3 text-base font-medium text-parchment focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 min-[1200px]:text-sm"
               >
                 {mapIndex.maps.map((entry) => (
                   <option key={entry.id} value={entry.id}>
@@ -157,7 +159,7 @@ export function EditorToolbar({
                 if (found) onSeason(found);
               }}
               aria-label="Season"
-              className="mt-1.5 h-10 w-full rounded-lg border border-forest-600 bg-forest-950 px-3 text-base font-medium text-parchment focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 lg:text-sm"
+              className="mt-1.5 h-10 w-full rounded-lg border border-forest-600 bg-forest-950 px-3 text-base font-medium text-parchment focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 min-[1200px]:text-sm"
             >
               {Object.values(Season).map((option) => (
                 <option key={option} value={option}>
@@ -167,8 +169,10 @@ export function EditorToolbar({
             </select>
           </label>
         </section>
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold">Edit</h2>
+        <section className="space-y-3 py-5">
+          <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-amber-200">
+            Edit
+          </h2>
           <div className="grid grid-cols-3 gap-1 rounded-lg bg-forest-950 p-1">
             {tools.map(({ tool: option, icon: Icon, label, shortcut }) => (
               <Button
@@ -218,51 +222,10 @@ export function EditorToolbar({
             </Button>
           </div>
         </section>
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold">Display</h2>
-          <div className="space-y-1">
-            {[
-              {
-                label: "Tile grid",
-                icon: Grid3X3,
-                enabled: grid,
-                action: onGrid,
-              },
-              {
-                label: "Buildable tiles",
-                icon: Eye,
-                enabled: overlay,
-                action: onOverlay,
-              },
-              {
-                label: "Item coverage",
-                icon: Radar,
-                enabled: coverage,
-                action: onCoverage,
-              },
-            ].map(({ label, icon: Icon, enabled, action }) => (
-              <button
-                key={label}
-                type="button"
-                onClick={action}
-                aria-pressed={enabled}
-                className="flex min-h-10 w-full items-center gap-3 rounded-lg px-2 text-left text-xs text-mist hover:bg-forest-800 hover:text-parchment focus-visible:outline-2 focus-visible:outline-amber-300"
-              >
-                <Icon aria-hidden="true" className="size-4" />
-                <span className="flex-1">{label}</span>
-                <span
-                  className={
-                    enabled ? "font-semibold text-amber-200" : "text-mist"
-                  }
-                >
-                  {enabled ? "On" : "Off"}
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold">Zoom</h2>
+        <section className="space-y-3 py-5">
+          <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-amber-200">
+            Zoom
+          </h2>
           <div className="grid grid-cols-3 gap-2">
             <Button
               variant="secondary"
@@ -293,13 +256,58 @@ export function EditorToolbar({
             </Button>
           </div>
         </section>
+        <section className="space-y-3 py-5">
+          <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-amber-200">
+            Display
+          </h2>
+          <div className="space-y-1">
+            {[
+              {
+                label: "Tile grid",
+                icon: Grid3X3,
+                enabled: grid,
+                action: onGrid,
+              },
+              {
+                label: "Buildable tiles",
+                icon: Eye,
+                enabled: overlay,
+                action: onOverlay,
+              },
+              {
+                label: "Item coverage",
+                icon: Radar,
+                enabled: coverage,
+                action: onCoverage,
+              },
+            ].map(({ label, icon: Icon, enabled, action }) => (
+              <button
+                key={label}
+                type="button"
+                onClick={action}
+                aria-pressed={enabled}
+                className="flex min-h-10 w-full items-center gap-3 rounded-lg px-2 text-left text-sm text-mist hover:bg-forest-800 hover:text-parchment focus-visible:outline-2 focus-visible:outline-amber-300"
+              >
+                <Icon aria-hidden="true" className="size-4 shrink-0" />
+                <span className="min-w-0 flex-1">{label}</span>
+                <span
+                  className={
+                    enabled ? "font-semibold text-amber-200" : "text-mist"
+                  }
+                >
+                  {enabled ? "On" : "Off"}
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
         <PlanFiles
           onExportPng={onExportPng}
           onExportJson={onExportJson}
           onImportJson={onImportJson}
         />
       </div>
-      <div className="border-t border-forest-700 px-4 py-3">
+      <div className="border-t border-forest-700 bg-forest-950/30 px-4 py-4">
         <ReportIssue context={reportIssueContext} />
         <div className="space-y-1 text-center text-xs text-mist">
           <p>Changes save on this device</p>

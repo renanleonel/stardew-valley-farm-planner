@@ -63,13 +63,13 @@ function PlannerContent() {
   const leftPanel = useRef<HTMLElement>(null);
   const rightPanel = useRef<HTMLElement>(null);
   const [narrow, setNarrow] = useState(
-    () => window.matchMedia("(max-width: 1023px)").matches,
+    () => window.matchMedia("(max-width: 1199px)").matches,
   );
   const [leftOpen, setLeftOpen] = useState(
-    () => !window.matchMedia("(max-width: 1023px)").matches,
+    () => !window.matchMedia("(max-width: 1199px)").matches,
   );
   const [rightOpen, setRightOpen] = useState(
-    () => !window.matchMedia("(max-width: 1023px)").matches,
+    () => !window.matchMedia("(max-width: 1199px)").matches,
   );
   const [notice, setNotice] = useState<string | null>(null);
   const closeLeft = useCallback(() => {
@@ -148,7 +148,7 @@ function PlannerContent() {
       : undefined;
 
   useEffect(() => {
-    const media = window.matchMedia("(max-width: 1023px)");
+    const media = window.matchMedia("(max-width: 1199px)");
     const onChange = () => {
       setNarrow(media.matches);
       setLeftOpen(!media.matches);
@@ -322,12 +322,14 @@ function PlannerContent() {
               </Button>
             )}
             {narrow && !leftOpen && !rightOpen && (
-              <div className="pointer-events-none absolute left-1/2 top-20 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-forest-950/90 px-3 py-2 text-center text-xs text-parchment shadow-lg">
-                <span className="font-semibold">
+              <div className="pointer-events-none absolute left-1/2 top-20 z-10 flex max-w-[calc(100%-1.5rem)] -translate-x-1/2 items-center rounded-lg border border-forest-600 bg-forest-950/95 px-3 py-2 text-center text-xs text-parchment shadow-lg">
+                <span className="min-w-0 truncate font-semibold">
                   {inside?.title ?? map.name}
                 </span>
-                <span className="mx-2 text-mist">·</span>
-                <span className="capitalize text-mist">{plan.season}</span>
+                <span className="mx-2 shrink-0 text-mist">·</span>
+                <span className="shrink-0 capitalize text-mist">
+                  {plan.season}
+                </span>
               </div>
             )}
             <FarmCanvas
@@ -414,7 +416,7 @@ function PlannerContent() {
               />
             )}
             {state.selectedIds.length > 1 && (
-              <div className="absolute right-3 top-16 w-56 rounded-xl bg-forest-950/95 p-4 text-parchment shadow-xl">
+              <div className="absolute right-3 top-16 max-h-[calc(100%-5rem)] w-56 max-w-[calc(100%-1.5rem)] overflow-y-auto rounded-xl border border-forest-600 bg-forest-950/95 p-4 text-parchment shadow-xl">
                 <h2 className="font-display text-lg font-bold leading-5">
                   {state.selectedIds.length} items
                 </h2>

@@ -11,8 +11,8 @@ export function PlanFiles({
   onImportJson: () => void;
 }) {
   return (
-    <details className="group">
-      <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between rounded-lg text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 [&::-webkit-details-marker]:hidden">
+    <details className="group py-4">
+      <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between rounded-lg text-xs font-bold uppercase tracking-[0.14em] text-amber-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 [&::-webkit-details-marker]:hidden">
         Plan files
         <ChevronDown
           aria-hidden="true"

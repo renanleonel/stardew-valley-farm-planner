@@ -4,7 +4,7 @@ export function PlannerSkeleton() {
       className="flex h-dvh min-h-0 bg-forest-950 text-parchment"
       aria-label="Loading farm planner"
     >
-      <div className="hidden w-76 shrink-0 border-r border-forest-700 bg-forest-900 p-4 lg:block">
+      <div className="hidden w-76 shrink-0 border-r border-forest-700 bg-forest-900 p-4 min-[1200px]:block">
         <div className="h-7 w-36 rounded bg-forest-700" />
         <div className="mt-7 h-10 rounded bg-forest-700" />
         <div className="mt-5 grid grid-cols-2 gap-2">
@@ -19,7 +19,7 @@ export function PlannerSkeleton() {
         </div>
       </div>
       <div className="min-w-0 flex-1 bg-forest-900" />
-      <div className="hidden w-68 shrink-0 border-l border-forest-700 bg-forest-900 p-4 lg:block">
+      <div className="hidden w-68 shrink-0 border-l border-forest-700 bg-forest-900 p-4 min-[1200px]:block">
         <div className="h-7 w-36 rounded bg-forest-700" />
         <div className="mt-7 space-y-3">
           {Array.from({ length: 7 }, (_, index) => (

@@ -19,8 +19,10 @@ export function SelectionInspector({
   onEnterInterior?: () => void;
 }) {
   return (
-    <div className="absolute right-3 top-16 w-56 rounded-xl bg-forest-950/95 p-4 text-parchment shadow-xl">
-      <h2 className="font-display text-lg font-bold leading-5">{item.name}</h2>
+    <div className="absolute right-3 top-16 max-h-[calc(100%-5rem)] w-56 max-w-[calc(100%-1.5rem)] overflow-y-auto rounded-xl border border-forest-600 bg-forest-950/95 p-4 text-parchment shadow-xl">
+      <h2 className="break-words font-display text-lg font-bold leading-5">
+        {item.name}
+      </h2>
       <div className="mt-2 text-xs text-mist">
         Tile {placement.x}, {placement.y} · {item.footprint.width}×
         {item.footprint.height}
@@ -32,7 +34,7 @@ export function SelectionInspector({
             aria-label="Appearance"
             value={placement.variant ?? item.variants[0].id}
             onChange={(event) => onVariant(event.target.value)}
-            className="h-9 rounded-lg border border-forest-600 bg-forest-900 px-2 text-parchment"
+            className="h-10 max-w-full rounded-lg border border-forest-600 bg-forest-900 px-2 text-base text-parchment focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 sm:text-sm"
           >
             {item.variants.map((variant) => (
               <option key={variant.id} value={variant.id}>

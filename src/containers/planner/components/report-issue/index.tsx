@@ -37,16 +37,16 @@ export function ReportIssue({ context }: { context: ReportIssueContext }) {
         </Button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-forest-950/80" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[calc(100dvh-2rem)] w-[min(32rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-forest-600 bg-forest-900 p-5 text-parchment shadow-2xl sm:p-6">
+        <Dialog.Overlay className="report-issue-overlay fixed inset-0 z-50 bg-forest-950/80" />
+        <Dialog.Content className="report-issue-dialog fixed left-1/2 top-1/2 z-50 max-h-[calc(100dvh-2rem)] w-[min(32rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-forest-600 bg-forest-900 p-5 text-parchment shadow-2xl sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <Dialog.Title className="font-display text-2xl font-bold">
                 Report an issue
               </Dialog.Title>
-              <Dialog.Description className="mt-2 text-sm leading-6 text-mist">
-                Describe the problem, then open a draft addressed to
-                {` ${REPORT_ISSUE_EMAIL}`}. You can review it before sending.
+              <Dialog.Description className="mt-2 text-sm leading-5 text-mist">
+                Tell us what happened. Review the email draft before sending it
+                to {REPORT_ISSUE_EMAIL}.
               </Dialog.Description>
             </div>
             <Dialog.Close asChild>
@@ -76,7 +76,7 @@ export function ReportIssue({ context }: { context: ReportIssueContext }) {
             <label className="block text-sm font-semibold">
               Details and steps to reproduce
               <textarea
-                className="mt-2 min-h-32 w-full resize-y rounded-lg border border-forest-600 bg-forest-950 px-3 py-2 text-sm font-normal text-parchment placeholder:text-mist focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
+                className="mt-2 min-h-32 w-full resize-y rounded-lg border border-forest-600 bg-forest-950 px-3 py-2 text-base font-normal text-parchment placeholder:text-mist focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 sm:text-sm"
                 value={description}
                 maxLength={2000}
                 placeholder="What happened, and what did you expect?"
@@ -88,8 +88,8 @@ export function ReportIssue({ context }: { context: ReportIssueContext }) {
             </label>
           </div>
           <p className="mt-3 text-xs leading-5 text-mist">
-            The draft includes your map, season, location, and page URL. No
-            email is sent until you send it from your mail account.
+            The draft includes your map, season, location, and page URL. It
+            stays in your mail account until you send it.
           </p>
           <div className="mt-5 grid gap-2 sm:grid-cols-2">
             <Button asChild variant="default" className="text-xs">
