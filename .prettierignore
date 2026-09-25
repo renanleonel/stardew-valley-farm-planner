@@ -1,0 +1,5 @@
+local-assets/
+public/game-assets/
+dist/
+node_modules/
+pnpm-lock.yaml

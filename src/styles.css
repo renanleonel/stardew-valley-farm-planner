@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Alegreya";
+  src: url("/fonts/alegreya-latin-700.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@theme {
+  --color-forest-950: #092a22;
+  --color-forest-900: #103b2f;
+  --color-forest-800: #174c3c;
+  --color-forest-700: #23604a;
+  --color-forest-600: #30765a;
+  --color-forest-500: #438d6a;
+  --color-parchment: #fff4d9;
+  --color-mist: #b9d1bc;
+  --color-amber-400: #f1bb68;
+  --color-amber-300: #ffd18b;
+  --color-amber-200: #ffe0a8;
+  --font-display: "Alegreya", Georgia, serif;
+}
+
+:root {
+  color-scheme: dark;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+body {
+  min-width: 320px;
+  background: #092a22;
+}
+* {
+  scrollbar-color: #438d6a #103b2f;
+  scrollbar-width: thin;
+}
+button,
+select,
+input {
+  font: inherit;
+}
+canvas {
+  image-rendering: pixelated;
+}
+.planner-tool-cursor {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .planner-map-canvas {
+    cursor: none;
+  }
+  .planner-tool-cursor {
+    display: grid;
+  }
+}
+::selection {
+  background: #f1bb68;
+  color: #092a22;
+}

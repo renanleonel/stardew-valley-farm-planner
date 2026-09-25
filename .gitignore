@@ -1,24 +1,11 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Extracted Stardew Valley content and downloaded tools are for local use only.
+/local-assets/
+/public/game-assets/
+/node_modules/
+/dist/
+*.tsbuildinfo
+/.vite/
+/.playwright-cli/
+/.impeccable/
+*.md
+/.env.local

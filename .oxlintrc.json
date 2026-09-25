@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["./**", "../**"],
+            "message": "Use the @/ alias instead of a relative path."
+          }
+        ]
+      }
+    ]
+  }
+}
