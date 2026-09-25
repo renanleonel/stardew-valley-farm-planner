@@ -112,25 +112,6 @@ describe.skipIf(!generated)("generated game assets", () => {
     expect(new Set(catalog.items.map((item) => item.id)).size).toBe(
       catalog.items.length,
     );
-    const sourceJson = (name: string) =>
-      JSON.parse(
-        readFileSync(path.resolve("local-assets/unpacked/Data", name), "utf8"),
-      ) as Record<string, unknown>;
-    const sourceIds = {
-      furniture: Object.keys(sourceJson("Furniture.json")),
-      building: Object.keys(sourceJson("Buildings.json")),
-      craftable: Object.keys(sourceJson("BigCraftables.json")),
-      "fruit-tree": Object.keys(sourceJson("FruitTrees.json")),
-    };
-    for (const [kind, ids] of Object.entries(sourceIds)) {
-      expect(
-        catalog.items.filter((item) => item.id.startsWith(`${kind}:`)),
-      ).toHaveLength(ids.length);
-      for (const id of ids)
-        expect(catalog.items.some((item) => item.id === `${kind}:${id}`)).toBe(
-          true,
-        );
-    }
     expect(
       catalog.items.filter((item) => item.id.startsWith("floor:")),
     ).toHaveLength(13);
@@ -221,6 +202,39 @@ describe.skipIf(!generated)("generated game assets", () => {
           ).toBeLessThanOrEqual(size.height);
         }
       }
+    }
+  });
+
+  const sourceFiles = [
+    "Furniture.json",
+    "Buildings.json",
+    "BigCraftables.json",
+    "FruitTrees.json",
+  ];
+  it.skipIf(
+    !sourceFiles.every((name) =>
+      existsSync(path.resolve("local-assets/unpacked/Data", name)),
+    ),
+  )("matches item IDs from the local game extraction", () => {
+    const catalog = CatalogSchema.parse(json("catalog.json"));
+    const sourceJson = (name: string) =>
+      JSON.parse(
+        readFileSync(path.resolve("local-assets/unpacked/Data", name), "utf8"),
+      ) as Record<string, unknown>;
+    const sourceIds = {
+      furniture: Object.keys(sourceJson("Furniture.json")),
+      building: Object.keys(sourceJson("Buildings.json")),
+      craftable: Object.keys(sourceJson("BigCraftables.json")),
+      "fruit-tree": Object.keys(sourceJson("FruitTrees.json")),
+    };
+    for (const [kind, ids] of Object.entries(sourceIds)) {
+      expect(
+        catalog.items.filter((item) => item.id.startsWith(`${kind}:`)),
+      ).toHaveLength(ids.length);
+      for (const id of ids)
+        expect(catalog.items.some((item) => item.id === `${kind}:${id}`)).toBe(
+          true,
+        );
     }
   });
 

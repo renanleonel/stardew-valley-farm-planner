@@ -1,0 +1,32 @@
+{
+  "gameVersion": "1.6.15",
+  "sourceVersion": "1.6.15, , 24356, ",
+  "maps": [
+    "standard: 80x65, 6 layers, 4 sheets",
+    "riverland: 80x65, 7 layers, 4 sheets",
+    "forest: 80x65, 5 layers, 4 sheets",
+    "hilltop: 80x65, 7 layers, 4 sheets",
+    "wilderness: 80x65, 5 layers, 4 sheets",
+    "four-corners: 80x80, 6 layers, 4 sheets",
+    "beach: 110x110, 9 layers, 4 sheets",
+    "meadowlands: 100x75, 8 layers, 6 sheets"
+  ],
+  "interiors": [
+    "coop: 12x10, 3 layers, 1 sheets",
+    "coop2: 16x10, 3 layers, 1 sheets",
+    "coop3: 23x10, 4 layers, 2 sheets",
+    "barn: 18x15, 4 layers, 2 sheets",
+    "barn2: 22x15, 4 layers, 2 sheets",
+    "barn3: 25x15, 4 layers, 2 sheets",
+    "shed: 13x14, 3 layers, 3 sheets",
+    "shed2: 19x17, 3 layers, 3 sheets",
+    "slimehutch: 18x14, 5 layers, 4 sheets",
+    "greenhouse: 20x24, 3 layers, 2 sheets",
+    "farmhouse: 12x12, 3 layers, 3 sheets",
+    "farmhouse1: 30x12, 3 layers, 3 sheets",
+    "farmhouse2: 70x46, 4 layers, 3 sheets"
+  ],
+  "copiedImages": 98,
+  "items": 955,
+  "warnings": []
+}

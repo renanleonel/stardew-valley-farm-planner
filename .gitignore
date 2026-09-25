@@ -1,10 +1,10 @@
-# Extracted Stardew Valley content and downloaded tools are for local use only.
+# Keep raw extraction and downloaded tools local.
 /local-assets/
-/public/game-assets/
 /node_modules/
 /dist/
 *.tsbuildinfo
 /.vite/
+/.vercel/
 /.playwright-cli/
 /.impeccable/
 *.md
