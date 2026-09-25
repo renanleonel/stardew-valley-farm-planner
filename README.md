@@ -14,7 +14,7 @@ Plan a Stardew Valley farm tile by tile in your browser.
 - Toggle the tile grid, buildable area, and item coverage overlays.
 - Export the current view as a PNG or export and import planner data as JSON.
 - Reset the current farm to its starting layout. Reset asks for confirmation and can be undone.
-- Open a prefilled email draft from **Report issue** in the tools drawer.
+- Describe a problem through **Report issue**, then open a Gmail or email-app draft or copy the report.
 
 Plans save automatically in your browser on this device. Export a JSON backup before clearing browser data or moving to another device. The JSON format is for this planner; it is not a Stardew Valley save file.
 

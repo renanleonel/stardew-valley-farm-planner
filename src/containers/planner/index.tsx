@@ -28,10 +28,6 @@ import {
   placeItem,
 } from "@/containers/planner/lib/placement";
 import {
-  REPORT_ISSUE_EMAIL,
-  reportIssueHref,
-} from "@/containers/planner/lib/report-issue";
-import {
   useCatalogSuspense,
   useMapIndexSuspense,
   useSceneMapSuspense,
@@ -502,12 +498,12 @@ function PlannerContent() {
                 dispatch({ type: "reset-map" });
               }}
               onCollapse={closeRight}
-              reportIssueUrl={reportIssueHref(REPORT_ISSUE_EMAIL, {
+              reportIssueContext={{
                 map: state.store.activeMapId,
                 season: plan.season,
                 location: inside?.title ?? "Farm",
                 pageUrl: window.location.href,
-              })}
+              }}
               interiorTitle={inside?.title}
               onBackToFarm={() => {
                 setInside(null);

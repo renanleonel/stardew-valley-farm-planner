@@ -1,6 +1,5 @@
 import {
   ArrowLeft,
-  Bug,
   Eraser,
   Eye,
   Grid3X3,
@@ -18,8 +17,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlanFiles } from "@/containers/planner/components/plan-files";
+import { ReportIssue } from "@/containers/planner/components/report-issue";
 import { MapId, Season, Tool } from "@/containers/planner/domain/enums/planner";
 import type { MapIndex } from "@/containers/planner/domain/schemas/assets";
+import type { ReportIssueContext } from "@/containers/planner/lib/report-issue";
 
 export function EditorToolbar({
   tool,
@@ -47,7 +48,7 @@ export function EditorToolbar({
   onImportJson,
   onResetMap,
   onCollapse,
-  reportIssueUrl,
+  reportIssueContext,
   interiorTitle,
   onBackToFarm,
 }: {
@@ -76,7 +77,7 @@ export function EditorToolbar({
   onImportJson: () => void;
   onResetMap: () => void;
   onCollapse: () => void;
-  reportIssueUrl: string;
+  reportIssueContext: ReportIssueContext;
   interiorTitle?: string;
   onBackToFarm: () => void;
 }) {
@@ -185,7 +186,7 @@ export function EditorToolbar({
               </Button>
             ))}
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <Button
               variant="secondary"
               onClick={onUndo}
@@ -205,6 +206,15 @@ export function EditorToolbar({
               className="h-10 text-xs"
             >
               <Redo2 aria-hidden="true" className="size-4" /> Redo
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={onResetMap}
+              title="Reset current farm"
+              aria-label="Reset current farm"
+              className="h-10 px-1 text-xs"
+            >
+              <RotateCcw aria-hidden="true" className="size-4" /> Reset
             </Button>
           </div>
         </section>
@@ -290,20 +300,8 @@ export function EditorToolbar({
         />
       </div>
       <div className="border-t border-forest-700 px-4 py-3">
-        <Button
-          variant="danger"
-          className="mb-2 w-full text-xs"
-          onClick={onResetMap}
-        >
-          <RotateCcw aria-hidden="true" className="size-4" /> Reset current farm
-        </Button>
-        <Button asChild variant="secondary" className="w-full text-xs">
-          <a href={reportIssueUrl}>
-            <Bug aria-hidden="true" className="size-4" /> Report issue
-          </a>
-        </Button>
+        <ReportIssue context={reportIssueContext} />
         <div className="space-y-1 text-center text-xs text-mist">
-          <p className="mt-2">Report issue opens an email draft</p>
           <p>Changes save on this device</p>
         </div>
       </div>
