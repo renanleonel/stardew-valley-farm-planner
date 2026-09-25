@@ -8,4 +8,5 @@
 /.playwright-cli/
 /.impeccable/
 *.md
+!README.md
 /.env.local
