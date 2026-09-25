@@ -11,6 +11,7 @@ import {
   PanelRightClose,
   Radar,
   Redo2,
+  RotateCcw,
   Undo2,
   ZoomIn,
   ZoomOut,
@@ -44,6 +45,7 @@ export function EditorToolbar({
   onExportPng,
   onExportJson,
   onImportJson,
+  onResetMap,
   onCollapse,
   reportIssueUrl,
   interiorTitle,
@@ -72,8 +74,9 @@ export function EditorToolbar({
   onExportPng: () => void;
   onExportJson: () => void;
   onImportJson: () => void;
+  onResetMap: () => void;
   onCollapse: () => void;
-  reportIssueUrl?: string;
+  reportIssueUrl: string;
   interiorTitle?: string;
   onBackToFarm: () => void;
 }) {
@@ -287,15 +290,20 @@ export function EditorToolbar({
         />
       </div>
       <div className="border-t border-forest-700 px-4 py-3">
-        {reportIssueUrl && (
-          <Button asChild variant="secondary" className="w-full text-xs">
-            <a href={reportIssueUrl}>
-              <Bug aria-hidden="true" className="size-4" /> Report issue
-            </a>
-          </Button>
-        )}
+        <Button
+          variant="danger"
+          className="mb-2 w-full text-xs"
+          onClick={onResetMap}
+        >
+          <RotateCcw aria-hidden="true" className="size-4" /> Reset current farm
+        </Button>
+        <Button asChild variant="secondary" className="w-full text-xs">
+          <a href={reportIssueUrl}>
+            <Bug aria-hidden="true" className="size-4" /> Report issue
+          </a>
+        </Button>
         <div className="space-y-1 text-center text-xs text-mist">
-          {reportIssueUrl && <p className="mt-2">Opens an email draft</p>}
+          <p className="mt-2">Report issue opens an email draft</p>
           <p>Changes save on this device</p>
         </div>
       </div>

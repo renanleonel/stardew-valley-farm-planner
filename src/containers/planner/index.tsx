@@ -27,7 +27,10 @@ import {
   movePlacements,
   placeItem,
 } from "@/containers/planner/lib/placement";
-import { reportIssueHref } from "@/containers/planner/lib/report-issue";
+import {
+  REPORT_ISSUE_EMAIL,
+  reportIssueHref,
+} from "@/containers/planner/lib/report-issue";
 import {
   useCatalogSuspense,
   useMapIndexSuspense,
@@ -484,20 +487,27 @@ function PlannerContent() {
                 downloadJson("stardew-farm-plans.json", state.store)
               }
               onImportJson={() => input.current?.click()}
+              onResetMap={() => {
+                const mapName =
+                  index.maps.find(
+                    (entry) => entry.id === state.store.activeMapId,
+                  )?.name ?? "this farm";
+                if (
+                  !window.confirm(
+                    `Reset ${mapName} to its original layout? This removes all changes to this farm, including interiors. You can undo this action.`,
+                  )
+                )
+                  return;
+                setInside(null);
+                dispatch({ type: "reset-map" });
+              }}
               onCollapse={closeRight}
-              reportIssueUrl={
-                import.meta.env.VITE_REPORT_ISSUE_EMAIL?.trim()
-                  ? reportIssueHref(
-                      import.meta.env.VITE_REPORT_ISSUE_EMAIL.trim(),
-                      {
-                        map: state.store.activeMapId,
-                        season: plan.season,
-                        location: inside?.title ?? "Farm",
-                        pageUrl: window.location.href,
-                      },
-                    )
-                  : undefined
-              }
+              reportIssueUrl={reportIssueHref(REPORT_ISSUE_EMAIL, {
+                map: state.store.activeMapId,
+                season: plan.season,
+                location: inside?.title ?? "Farm",
+                pageUrl: window.location.href,
+              })}
               interiorTitle={inside?.title}
               onBackToFarm={() => {
                 setInside(null);

@@ -1,6 +1,7 @@
 import { expect, it } from "vitest";
-import { MapId, Tool } from "@/containers/planner/domain/enums/planner";
+import { MapId, Season, Tool } from "@/containers/planner/domain/enums/planner";
 import {
+  createPlan,
   createPlanStore,
   currentPlan,
 } from "@/containers/planner/domain/entities/plan";
@@ -79,4 +80,57 @@ it("clears the palette item and placed-item selection together", () => {
     selectedIds: [],
   });
   expect(cleared.store).toBe(state.store);
+});
+
+it("resets only the active farm and can undo the reset", () => {
+  let state: EditorState = {
+    store: createPlanStore(),
+    tool: Tool.PLACE,
+    activeItemId: "floor:wood",
+    selectedIds: ["default-farmhouse"],
+    grid: false,
+    buildableOverlay: false,
+    coverageOverlay: false,
+    past: [],
+    future: [],
+  };
+  state = editorReducer(state, {
+    type: "edit",
+    update: (plan) => ({
+      ...plan,
+      season: Season.SUMMER,
+      ground: { "1,1": "floor:wood" },
+      interiors: {
+        "default-farmhouse": {
+          ground: { "2,2": "floor:wood" },
+          placements: [],
+        },
+      },
+    }),
+  });
+  const editedStandard = currentPlan(state.store);
+  state = editorReducer(state, { type: "map", id: MapId.FOREST });
+  state = editorReducer(state, {
+    type: "edit",
+    update: (plan) => ({
+      ...plan,
+      ground: { "3,3": "floor:wood" },
+    }),
+  });
+  state = editorReducer(state, { type: "map", id: MapId.STANDARD });
+  state = editorReducer(state, { type: "reset-map" });
+
+  expect(currentPlan(state.store)).toEqual(createPlan(MapId.STANDARD));
+  expect(state.store.plans[MapId.FOREST]?.ground).toEqual({
+    "3,3": "floor:wood",
+  });
+  expect(state.tool).toBe(Tool.SELECT);
+  expect(state.selectedIds).toEqual([]);
+  expect(state.activeItemId).toBe("");
+  expect(state.past).toHaveLength(1);
+
+  state = editorReducer(state, { type: "undo" });
+  expect(currentPlan(state.store)).toEqual(editedStandard);
+  state = editorReducer(state, { type: "redo" });
+  expect(currentPlan(state.store)).toEqual(createPlan(MapId.STANDARD));
 });

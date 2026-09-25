@@ -1,5 +1,7 @@
 import type { MapId, Season } from "@/containers/planner/domain/enums/planner";
 
+export const REPORT_ISSUE_EMAIL = "renanleonelpro@gmail.com";
+
 export function reportIssueHref(
   email: string,
   context: {

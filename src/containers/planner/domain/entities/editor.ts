@@ -38,6 +38,7 @@ export type EditorAction =
   | { type: "end" }
   | { type: "undo" }
   | { type: "redo" }
+  | { type: "reset-map" }
   | { type: "load"; store: PlanStore };
 
 function replaceCurrent(state: EditorState, plan: FarmPlan): EditorState {
@@ -159,6 +160,22 @@ export function editorReducer(
         future: state.future.slice(0, -1),
         selectedIds: [],
       };
+    }
+    case "reset-map": {
+      const before = currentPlan(state.store);
+      const after = createPlan(state.store.activeMapId);
+      if (JSON.stringify(before) === JSON.stringify(after)) return state;
+      return pushHistory(
+        {
+          ...replaceCurrent(state, after),
+          tool: Tool.SELECT,
+          activeItemId: "",
+          selectedIds: [],
+          gestureBefore: undefined,
+        },
+        before,
+        after,
+      );
     }
     case "load":
       return {
