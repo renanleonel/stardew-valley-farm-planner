@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
-import { PanelLeftOpen, PanelRightOpen, Trash2 } from "lucide-react";
+import { PanelLeftOpen, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { FarmCanvas } from "@/containers/planner/components/farm-canvas";
@@ -22,6 +22,7 @@ import {
   useEditor,
 } from "@/containers/planner/hooks/use-editor";
 import {
+  canPlace,
   eraseAt,
   itemById,
   movePlacements,
@@ -61,15 +62,11 @@ function PlannerContent() {
   const canvas = useRef<FarmCanvasHandle>(null);
   const input = useRef<HTMLInputElement>(null);
   const leftPanel = useRef<HTMLElement>(null);
-  const rightPanel = useRef<HTMLElement>(null);
   const [narrow, setNarrow] = useState(
-    () => window.matchMedia("(max-width: 1199px)").matches,
+    () => window.matchMedia("(max-width: 767px)").matches,
   );
   const [leftOpen, setLeftOpen] = useState(
-    () => !window.matchMedia("(max-width: 1199px)").matches,
-  );
-  const [rightOpen, setRightOpen] = useState(
-    () => !window.matchMedia("(max-width: 1199px)").matches,
+    () => !window.matchMedia("(max-width: 767px)").matches,
   );
   const [notice, setNotice] = useState<string | null>(null);
   const closeLeft = useCallback(() => {
@@ -80,21 +77,13 @@ function PlannerContent() {
         ?.focus(),
     );
   }, []);
-  const closeRight = useCallback(() => {
-    setRightOpen(false);
-    requestAnimationFrame(() =>
-      document
-        .querySelector<HTMLButtonElement>('[data-panel-trigger="tools"]')
-        ?.focus(),
-    );
-  }, []);
   const trapPanelFocus = (event: ReactKeyboardEvent<HTMLElement>) => {
     if (!narrow || event.key !== "Tab") return;
     const focusable = Array.from(
       event.currentTarget.querySelectorAll<HTMLElement>(
         "button:not(:disabled), input:not(:disabled), select:not(:disabled), a[href]",
       ),
-    );
+    ).filter((element) => element.getClientRects().length > 0);
     if (!focusable.length) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -148,11 +137,10 @@ function PlannerContent() {
       : undefined;
 
   useEffect(() => {
-    const media = window.matchMedia("(max-width: 1199px)");
+    const media = window.matchMedia("(max-width: 767px)");
     const onChange = () => {
       setNarrow(media.matches);
       setLeftOpen(!media.matches);
-      setRightOpen(!media.matches);
     };
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
@@ -160,13 +148,9 @@ function PlannerContent() {
 
   useEffect(() => {
     if (!narrow) return;
-    const panel = leftOpen
-      ? leftPanel.current
-      : rightOpen
-        ? rightPanel.current
-        : null;
-    panel?.querySelector<HTMLElement>("button")?.focus();
-  }, [narrow, leftOpen, rightOpen]);
+    if (leftOpen)
+      leftPanel.current?.querySelector<HTMLElement>("button")?.focus();
+  }, [narrow, leftOpen]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -196,7 +180,6 @@ function PlannerContent() {
       if (event.key.toLowerCase() === "g") dispatch({ type: "grid" });
       if (event.key === "Escape" && narrow) {
         if (leftOpen) closeLeft();
-        if (rightOpen) closeRight();
       }
       if (event.key === "Delete" && state.selectedIds.length) {
         const ids = new Set(state.selectedIds);
@@ -211,16 +194,7 @@ function PlannerContent() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [
-    closeLeft,
-    closeRight,
-    dispatch,
-    editScene,
-    leftOpen,
-    narrow,
-    rightOpen,
-    state.selectedIds,
-  ]);
+  }, [closeLeft, dispatch, editScene, leftOpen, narrow, state.selectedIds]);
 
   const editAt = (tile: { x: number; y: number }) => {
     if (state.tool === Tool.ERASE)
@@ -250,24 +224,27 @@ function PlannerContent() {
   return (
     <div className="relative flex h-dvh min-h-0 overflow-hidden bg-forest-950 text-parchment">
       <h1 className="sr-only">Stardew farm planner</h1>
-      {narrow && (leftOpen || rightOpen) && (
+      {narrow && (
         <button
-          className="fixed inset-0 z-20 bg-black/60"
-          onClick={() => {
-            if (leftOpen) closeLeft();
-            if (rightOpen) closeRight();
-          }}
+          className="planner-drawer-backdrop fixed inset-0 z-20 bg-black/60"
+          data-open={leftOpen}
+          inert={!leftOpen}
+          aria-hidden={!leftOpen}
+          onClick={closeLeft}
           aria-label="Close side panel"
         />
       )}
       <div className="flex min-h-0 flex-1">
-        {leftOpen && (
+        {(narrow || leftOpen) && (
           <aside
             ref={leftPanel}
             onKeyDown={trapPanelFocus}
+            data-open={leftOpen}
+            inert={!leftOpen}
+            aria-hidden={!leftOpen}
             className={
               narrow
-                ? "fixed inset-y-0 left-0 z-30 w-[min(21rem,90vw)] border-r border-forest-700 shadow-2xl"
+                ? "planner-drawer fixed inset-y-0 left-0 z-30 w-[min(21rem,90vw)] border-r border-forest-700 shadow-2xl"
                 : "w-76 shrink-0 border-r border-forest-700"
             }
             aria-label="Item library"
@@ -284,19 +261,13 @@ function PlannerContent() {
             />
           </aside>
         )}
-        <main
-          className="relative min-w-0 flex-1"
-          inert={narrow && (leftOpen || rightOpen)}
-        >
+        <main className="relative min-w-0 flex-1" inert={narrow && leftOpen}>
           <div className="relative h-full min-h-0">
             {!leftOpen && (
               <Button
                 variant="secondary"
-                className="absolute left-3 top-3 z-10 h-10 bg-forest-950/95 px-3 shadow-lg"
-                onClick={() => {
-                  if (narrow) setRightOpen(false);
-                  setLeftOpen(true);
-                }}
+                className="absolute bottom-3 left-3 z-10 h-10 bg-forest-950/95 px-3 shadow-lg sm:bottom-auto sm:top-3"
+                onClick={() => setLeftOpen(true)}
                 data-panel-trigger="library"
                 title="Open item library"
                 aria-label="Open item library"
@@ -304,33 +275,6 @@ function PlannerContent() {
                 <PanelLeftOpen aria-hidden="true" className="size-4" />
                 Library
               </Button>
-            )}
-            {!rightOpen && (
-              <Button
-                variant="secondary"
-                className="absolute right-3 top-3 z-10 h-10 bg-forest-950/95 px-3 shadow-lg"
-                onClick={() => {
-                  if (narrow) setLeftOpen(false);
-                  setRightOpen(true);
-                }}
-                data-panel-trigger="tools"
-                title="Open tools"
-                aria-label="Open tools"
-              >
-                Tools
-                <PanelRightOpen aria-hidden="true" className="size-4" />
-              </Button>
-            )}
-            {narrow && !leftOpen && !rightOpen && (
-              <div className="pointer-events-none absolute left-1/2 top-20 z-10 flex max-w-[calc(100%-1.5rem)] -translate-x-1/2 items-center rounded-lg border border-forest-600 bg-forest-950/95 px-3 py-2 text-center text-xs text-parchment shadow-lg">
-                <span className="min-w-0 truncate font-semibold">
-                  {inside?.title ?? map.name}
-                </span>
-                <span className="mx-2 shrink-0 text-mist">·</span>
-                <span className="shrink-0 capitalize text-mist">
-                  {plan.season}
-                </span>
-              </div>
             )}
             <FarmCanvas
               ref={canvas}
@@ -370,8 +314,59 @@ function PlannerContent() {
             />
             {selected && selectedItem && (
               <SelectionInspector
+                key={selected.id}
                 placement={selected}
                 item={selectedItem}
+                onClose={() => dispatch({ type: "select" })}
+                onDuplicate={() => {
+                  const candidates = [
+                    {
+                      x: selected.x + selectedItem.footprint.width,
+                      y: selected.y,
+                    },
+                    {
+                      x: selected.x - selectedItem.footprint.width,
+                      y: selected.y,
+                    },
+                    {
+                      x: selected.x,
+                      y: selected.y + selectedItem.footprint.height,
+                    },
+                    {
+                      x: selected.x,
+                      y: selected.y - selectedItem.footprint.height,
+                    },
+                  ];
+                  for (let radius = 1; radius <= 12; radius += 1) {
+                    for (let dy = -radius; dy <= radius; dy += 1) {
+                      for (let dx = -radius; dx <= radius; dx += 1) {
+                        if (Math.max(Math.abs(dx), Math.abs(dy)) === radius)
+                          candidates.push({
+                            x: selected.x + dx,
+                            y: selected.y + dy,
+                          });
+                      }
+                    }
+                  }
+                  const next = candidates.find(
+                    ({ x, y }) =>
+                      canPlace(scenePlan, map, catalog, selectedItem, x, y)
+                        .length === 0,
+                  );
+                  if (!next) {
+                    setNotice("No nearby space for a duplicate");
+                    return;
+                  }
+                  const id = crypto.randomUUID();
+                  editScene((previous) => ({
+                    ...previous,
+                    placements: [
+                      ...previous.placements,
+                      { ...selected, ...next, id },
+                    ],
+                  }));
+                  dispatch({ type: "select", id });
+                }}
                 onVariant={(variant) =>
                   editScene((previous) => ({
                     ...previous,
@@ -445,75 +440,62 @@ function PlannerContent() {
             )}
           </div>
         </main>
-        {rightOpen && (
-          <aside
-            ref={rightPanel}
-            onKeyDown={trapPanelFocus}
-            className={
-              narrow
-                ? "fixed inset-y-0 right-0 z-30 w-[min(19rem,90vw)] border-l border-forest-700 shadow-2xl"
-                : "w-68 shrink-0 border-l border-forest-700"
+        <div inert={narrow && leftOpen}>
+          <EditorToolbar
+            tool={state.tool}
+            grid={state.grid}
+            overlay={state.buildableOverlay}
+            coverage={state.coverageOverlay}
+            canUndo={state.past.length > 0}
+            canRedo={state.future.length > 0}
+            mapId={state.store.activeMapId}
+            season={plan.season}
+            mapIndex={index}
+            onTool={(tool) => dispatch({ type: "tool", tool })}
+            onGrid={() => dispatch({ type: "grid" })}
+            onOverlay={() => dispatch({ type: "overlay" })}
+            onCoverage={() => dispatch({ type: "coverage" })}
+            onUndo={() => dispatch({ type: "undo" })}
+            onRedo={() => dispatch({ type: "redo" })}
+            onMap={(id) => {
+              setInside(null);
+              dispatch({ type: "map", id });
+            }}
+            onSeason={(season) => dispatch({ type: "season", season })}
+            onZoomIn={() => canvas.current?.zoomIn()}
+            onZoomOut={() => canvas.current?.zoomOut()}
+            onFit={() => canvas.current?.fit()}
+            onExportPng={() => canvas.current?.exportPng()}
+            onExportJson={() =>
+              downloadJson("stardew-farm-plans.json", state.store)
             }
-            aria-label="Planner tools"
-          >
-            <EditorToolbar
-              tool={state.tool}
-              grid={state.grid}
-              overlay={state.buildableOverlay}
-              coverage={state.coverageOverlay}
-              canUndo={state.past.length > 0}
-              canRedo={state.future.length > 0}
-              mapId={state.store.activeMapId}
-              season={plan.season}
-              mapIndex={index}
-              onTool={(tool) => dispatch({ type: "tool", tool })}
-              onGrid={() => dispatch({ type: "grid" })}
-              onOverlay={() => dispatch({ type: "overlay" })}
-              onCoverage={() => dispatch({ type: "coverage" })}
-              onUndo={() => dispatch({ type: "undo" })}
-              onRedo={() => dispatch({ type: "redo" })}
-              onMap={(id) => {
-                setInside(null);
-                dispatch({ type: "map", id });
-              }}
-              onSeason={(season) => dispatch({ type: "season", season })}
-              onZoomIn={() => canvas.current?.zoomIn()}
-              onZoomOut={() => canvas.current?.zoomOut()}
-              onFit={() => canvas.current?.fit()}
-              onExportPng={() => canvas.current?.exportPng()}
-              onExportJson={() =>
-                downloadJson("stardew-farm-plans.json", state.store)
-              }
-              onImportJson={() => input.current?.click()}
-              onResetMap={() => {
-                const mapName =
-                  index.maps.find(
-                    (entry) => entry.id === state.store.activeMapId,
-                  )?.name ?? "this farm";
-                if (
-                  !window.confirm(
-                    `Reset ${mapName} to its original layout? This removes all changes to this farm, including interiors. You can undo this action.`,
-                  )
+            onImportJson={() => input.current?.click()}
+            onResetMap={() => {
+              const mapName =
+                index.maps.find((entry) => entry.id === state.store.activeMapId)
+                  ?.name ?? "this farm";
+              if (
+                !window.confirm(
+                  `Reset ${mapName} to its original layout? This removes all changes to this farm, including interiors. You can undo this action.`,
                 )
-                  return;
-                setInside(null);
-                dispatch({ type: "reset-map" });
-              }}
-              onCollapse={closeRight}
-              reportIssueContext={{
-                map: state.store.activeMapId,
-                season: plan.season,
-                location: inside?.title ?? "Farm",
-                pageUrl: window.location.href,
-              }}
-              interiorTitle={inside?.title}
-              onBackToFarm={() => {
-                setInside(null);
-                dispatch({ type: "select" });
-              }}
-            />
-          </aside>
-        )}
+              )
+                return;
+              setInside(null);
+              dispatch({ type: "reset-map" });
+            }}
+            reportIssueContext={{
+              map: state.store.activeMapId,
+              season: plan.season,
+              location: inside?.title ?? "Farm",
+              pageUrl: window.location.href,
+            }}
+            interiorTitle={inside?.title}
+            onBackToFarm={() => {
+              setInside(null);
+              dispatch({ type: "select" });
+            }}
+          />
+        </div>
       </div>
       <input
         ref={input}

@@ -856,7 +856,7 @@ export const FarmCanvas = forwardRef<FarmCanvasHandle, Props>(
         )}
         <div
           aria-live="polite"
-          className="pointer-events-none absolute bottom-3 left-3 max-w-[min(30rem,calc(100%-1.5rem))] rounded-lg bg-forest-950/95 px-3 py-2 text-xs leading-4 text-parchment shadow-lg"
+          className="planner-canvas-hint pointer-events-none absolute bottom-3 left-3 max-w-[min(30rem,calc(100%-1.5rem))] rounded-lg bg-forest-950/95 px-3 py-2 text-xs leading-4 text-parchment shadow-lg"
         >
           {movePreview
             ? `${movePreview.valid ? "Moving" : "Cannot move here"} ${movePreview.ids.length} ${movePreview.ids.length === 1 ? "item" : "items"} · Tile ${hover?.x ?? 0}, ${hover?.y ?? 0}`
@@ -868,7 +868,9 @@ export const FarmCanvas = forwardRef<FarmCanvasHandle, Props>(
                   ? "Drag to move the farm"
                   : tool === Tool.ERASE
                     ? "Point at an item to erase it"
-                    : "Choose an item from the library to start planning"}
+                    : selectedIds.length
+                      ? "Drag the selected item to move it"
+                      : "Click a placed item to select it"}
         </div>
       </div>
     );

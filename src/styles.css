@@ -9,22 +9,28 @@
 }
 
 @theme {
-  --color-forest-950: #111e1a;
-  --color-forest-900: #192d25;
-  --color-forest-800: #253c32;
-  --color-forest-700: #375146;
-  --color-forest-600: #526f5b;
-  --color-forest-500: #79917c;
-  --color-parchment: #f3ead8;
-  --color-mist: #c6cdbf;
-  --color-amber-400: #d6a86b;
-  --color-amber-300: #e9c68e;
-  --color-amber-200: #f2ddb0;
+  --color-forest-950: #121c19;
+  --color-forest-900: #1d2b25;
+  --color-forest-800: #2d3d32;
+  --color-forest-700: #465b48;
+  --color-forest-600: #657d62;
+  --color-forest-500: #8ca087;
+  --color-bark-950: #20231f;
+  --color-bark-900: #2c3027;
+  --color-bark-800: #3b4032;
+  --color-bark-700: #576047;
+  --color-bark-600: #727c5f;
+  --color-parchment: #f0e7d2;
+  --color-mist: #c5cfbb;
+  --color-amber-400: #d9a454;
+  --color-amber-300: #e9bf7b;
+  --color-amber-200: #f3d69d;
   --font-display: "Alegreya", Georgia, serif;
 }
 
 :root {
   color-scheme: dark;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   font-family:
     ui-sans-serif,
     system-ui,
@@ -45,10 +51,10 @@ body,
 }
 body {
   min-width: 320px;
-  background: #111e1a;
+  background: var(--color-forest-950);
 }
 * {
-  scrollbar-color: #526f5b #192d25;
+  scrollbar-color: var(--color-forest-600) var(--color-forest-900);
   scrollbar-width: thin;
 }
 button,
@@ -58,6 +64,128 @@ input {
 }
 canvas {
   image-rendering: pixelated;
+}
+.palette-tab,
+.palette-filter,
+.palette-chip,
+.palette-item,
+.planner-toolbar-button,
+.selection-bar button,
+.selection-action {
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+.palette-scroll {
+  scrollbar-color: var(--color-bark-600) var(--color-bark-900);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .palette-filter-menu {
+    animation: palette-filter-in 160ms var(--ease-out) both;
+    transform-origin: top right;
+  }
+}
+@keyframes palette-filter-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.planner-settings,
+.selection-actions {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition:
+    opacity 180ms var(--ease-out),
+    transform 180ms var(--ease-out),
+    visibility 180ms;
+}
+.planner-settings[data-open="true"],
+.selection-actions[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+@starting-style {
+  .selection-actions[data-open="true"] {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+.planner-drawer-backdrop {
+  transition: opacity 180ms var(--ease-out);
+}
+.planner-drawer-backdrop[data-open="false"] {
+  opacity: 0;
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .planner-drawer {
+    transition: transform 200ms var(--ease-out);
+  }
+  .planner-drawer[data-open="false"] {
+    transform: translateX(-100%);
+  }
+}
+.selection-action {
+  display: flex;
+  width: 100%;
+  min-height: 38px;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  padding: 0 10px;
+  color: var(--color-parchment);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.selection-action:hover {
+  background: var(--color-forest-800);
+}
+.selection-action:focus-visible {
+  outline: 2px solid var(--color-amber-300);
+}
+@media (hover: hover) and (pointer: fine) {
+  .palette-item {
+    transition:
+      transform 120ms ease,
+      background-color 120ms ease,
+      border-color 120ms ease;
+  }
+  .palette-item:hover {
+    transform: translateY(-1px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planner-settings,
+  .selection-actions {
+    transform: none;
+    transition:
+      opacity 120ms ease,
+      visibility 120ms;
+  }
+  .palette-item:hover {
+    transform: none;
+  }
+  .planner-drawer {
+    transition: none;
+  }
+}
+@media (max-width: 767px) {
+  .planner-canvas-hint {
+    bottom: 4rem;
+  }
 }
 .planner-tool-cursor {
   display: none;
@@ -71,8 +199,8 @@ canvas {
   }
 }
 ::selection {
-  background: #d6a86b;
-  color: #111e1a;
+  background: var(--color-amber-400);
+  color: var(--color-forest-950);
 }
 
 @media (prefers-reduced-motion: no-preference) {
